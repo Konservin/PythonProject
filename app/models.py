@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 
 class Filter(Base):
-    __tablename__ = "filters"
+    __tablename__ = "filter"
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
