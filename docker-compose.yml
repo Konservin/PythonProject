@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: fastapi-app
+    environment:
+      # Use SQLite by default for local dev (database file stored in ./data folder)
+      #- DATABASE_URL=sqlite:///./data/filters.db
+      # To use MySQL instead, comment the line above and uncomment the line below:
+      - DATABASE_URL=mysql+pymysql://fastapi:fastapi@db:3304/fastapi
+    ports:
+      - "8000:8000"  # maps container's 8000 to host 8000
+    volumes:
+      - ./data:/app/data  # persist SQLite data in a host folder (./data)
+    depends_on:
+      - db   # ensure the DB service is started (can be ignored if using SQLite only)
+
+  db:
+    image: mysql:8.0
+    container_name: fastapi-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root  # root password for MySQL (change as needed)
+      - MYSQL_DATABASE=fastapi            # default database name to create
+      - MYSQL_USER=fastapi               # default MySQL user
+      - MYSQL_PASSWORD=fastapi           # default MySQL user password
+    ports:
+      - "3304:3304"        # expose MySQL port (optional, for connecting from host)
+    volumes:
+      - mysql_data:/var/lib/mysql   # persist MySQL data in a named volume
+    # You can add an initialization script mount for MySQL if needed:
+    # volumes:
+    #   - ./mysql_init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  mysql_data:
