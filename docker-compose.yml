@@ -27,7 +27,9 @@ services:
     ports:
       - "3306:3306"        # expose MySQL port (optional, for connecting from host)
     volumes:
-      - mysql_data:/var/lib/mysql   # persist MySQL data in a named volume
+      - mysql_data:/var/lib/mysql
+      - ./docker-entrypoint-initdb.d/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql
+
     # You can add an initialization script mount for MySQL if needed:
     # volumes:
     #   - ./mysql_init.sql:/docker-entrypoint-initdb.d/init.sql
